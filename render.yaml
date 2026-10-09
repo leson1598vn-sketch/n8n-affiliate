@@ -1,0 +1,37 @@
+# Render Blueprint — deploy n8n 1 click (free tier, không cần thẻ)
+# Cách dùng: đẩy thư mục n8n-deploy/ lên GitHub → Render → New → Blueprint → chọn repo.
+# Render tự đọc file này và dựng service.
+# Sau đó: tạo Neon (neon.tech, free) lấy connection string → điền vào biến DATABASE_URL bên dưới.
+
+services:
+  - type: web
+    name: n8n-affiliate
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: N8N_HOST
+        value: n8n-affiliate.onrender.com   # <-- sửa thành URL thật của bạn sau khi deploy
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: WEBHOOK_URL
+        value: https://n8n-affiliate.onrender.com/   # <-- sửa giống N8N_HOST
+      - key: GENERIC_TIMEZONE
+        value: Asia/Ho_Chi_Minh
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        sync: false   # <-- điền host Neon, hoặc dùng DATABASE_URL thay cho 5 biến DB_*
+      - key: DB_POSTGRESDB_PORT
+        value: 5432
+      - key: DB_POSTGRESDB_DATABASE
+        value: n8n
+      - key: DB_POSTGRESDB_USER
+        sync: false
+      - key: DB_POSTGRESDB_PASSWORD
+        sync: false
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true   # Render tự sinh, giữ cố định sau lần đầu
